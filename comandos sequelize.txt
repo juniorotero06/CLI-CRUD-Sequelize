@@ -1,0 +1,5 @@
+node_modules/.bin/sequelize init
+node_modules/.bin/sequelize db:seed:all
+node_modules/.bin/sequelize seed:generate --name seed-contact
+node_modules/.bin/sequelize db:migrate
+node_modules/.bin/sequelize model:generate --name Contact --attributes firstname:string,lastname:string,phone:string,email:string
