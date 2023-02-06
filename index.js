@@ -14,6 +14,7 @@ const entity = args[0].split(":")[1];
 
 switch (command) {
   case CRUD.CREATE:
+    //Example: --create:Entity --id:1 --firstname:example ...
     const data = {};
     args.slice(1).map((arg) => {
       const tmp = arg.split("=");
@@ -26,15 +27,37 @@ switch (command) {
     break;
 
   case CRUD.READ:
+    //Example: --read:Entity 
     db[entity].findAll().then(console.log).catch(console.log);
     break;
 
   case CRUD.UPDATE:
-    console.log("Updated!");
+    //Example: --update:Entity --id:1 --firstname:example
+    const dataToUpdate = {};
+    args.slice(1).map((arg) => {
+      const tmp = arg.split("=");
+      dataToUpdate[tmp[0].substring(2)] = tmp[1];
+    });
+    db[entity].findOne({where: { id: dataToUpdate.id}}).then((data)=>{
+      data.update({
+        firstname: dataToUpdate.firstname,
+        lastname: dataToUpdate.lastname,
+        phone: dataToUpdate.phone,
+        email: dataToUpdate.email,
+      })
+    }).catch(console.log)
     break;
 
   case CRUD.DELETE:
-    console.log("Deleted!");
+    //Example: --delete:Entity --id:1
+    const dataToDelete = {};
+    args.slice(1).map((arg) => {
+      const tmp = arg.split("=");
+      dataToDelete[tmp[0].substring(2)] = tmp[1];
+    });
+    db[entity].destroy({where: { id: dataToDelete.id}})
+    .then(console.log("Deleted!"))
+    .catch(console.log);
     break;
   default:
     console.log("Operation not found!");
